@@ -384,11 +384,7 @@
     var index = -1,
         length = string.length;
 
-    while (++index < length) {
-      if (chars.indexOf(string.charAt(index)) < 0) {
-        break;
-      }
-    }
+    while (++index < length && chars.indexOf(string.charAt(index)) >= 0) {}
     return index;
   }
 
@@ -403,11 +399,7 @@
    */
   function charsRightIndex(string, chars) {
     var index = string.length;
-    while (index--) {
-      if (chars.indexOf(string.charAt(index)) < 0) {
-        break;
-      }
-    }
+    while (index-- && chars.indexOf(string.charAt(index)) >= 0) {}
     return index;
   }
 
@@ -1062,12 +1054,7 @@
     function arrayEach(array, iterator) {
       var index = -1,
           length = array ? array.length : 0;
-
-      while (++index < length) {
-        if (iterator(array[index], index, array) === false) {
-          break;
-        }
-      }
+      while (++index < length && iterator(array[index], index, array) !== false) {}
       return array;
     }
 
@@ -1082,11 +1069,7 @@
      */
     function arrayEachRight(array, iterator) {
       var length = array ? array.length : 0;
-      while (length--) {
-        if (iterator(array[length], length, array) === false) {
-          break;
-        }
-      }
+      while (length-- && iterator(array[length], length, array) !== false) {}
       return array;
     }
 
@@ -1524,11 +1507,7 @@
         if (support.unindexedChars && isString(iterable)) {
           iterable = iterable.split('');
         }
-        while (++index < length) {
-          if (iterator(iterable[index], index, collection) === false) {
-            break;
-          }
-        }
+        while (++index < length && iterator(iterable[index], index, collection) !== false) {}
       } else {
         baseForOwn(collection, iterator);
       }
@@ -1552,11 +1531,7 @@
         if (support.unindexedChars && isString(iterable)) {
           iterable = iterable.split('');
         }
-        while (length--) {
-          if (iterator(iterable[length], length, collection) === false) {
-            break;
-          }
-        }
+        while (length-- && iterator(iterable[length], length, collection) !== false) {}
       } else {
         baseForOwnRight(collection, iterator);
       }
