@@ -3768,6 +3768,20 @@
       return result ? baseUniq(result) : [];
     }
 
+    function zipWrapper(lengthPicker) {
+      return function() {
+        var array = arguments.length > 1 ? arguments : arguments[0],
+            index = -1,
+            length = isObject(length = lengthPicker(array, 'length')) && length.length || 0,
+            result = Array(length);
+
+        while (++index < length) {
+          result[index] = pluck(array, index);
+        }
+        return result;
+      }
+    }
+
     /**
      * Creates an array of grouped elements, the first of which contains the first
      * elements of the given arrays, the second of which contains the second elements
@@ -3788,17 +3802,9 @@
      * _.unzip([['fred', 30, true], ['barney', 40, false]]);
      * // => [['fred', 'barney'], [30, 40], [true, false]]
      */
-    function zip() {
-      var array = arguments.length > 1 ? arguments : arguments[0],
-          index = -1,
-          length = isObject(length = max(array, 'length')) && length.length || 0,
-          result = Array(length);
+    var zip = zipWrapper(max);
 
-      while (++index < length) {
-        result[index] = pluck(array, index);
-      }
-      return result;
-    }
+    var zipMin = zipWrapper(min);
 
     /**
      * Creates an object composed from arrays of `keys` and `values`. Provide
@@ -8689,6 +8695,7 @@
     lodash.wrap = wrap;
     lodash.xor = xor;
     lodash.zip = zip;
+    lodash.zipMin = zipMin;
     lodash.zipObject = zipObject;
 
     // add aliases
