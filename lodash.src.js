@@ -6638,9 +6638,7 @@
     function reject(collection, predicate, thisArg) {
       var func = isArray(collection) ? arrayFilter : baseFilter;
       predicate = getCallback(predicate, thisArg, 3);
-      return func(collection, function(value, index, collection) {
-        return !predicate(value, index, collection);
-      });
+      return func(collection, negate3Args(predicate));
     }
 
     /**
@@ -7679,6 +7677,23 @@
       }
       return function() {
         return !predicate.apply(this, arguments);
+      };
+    }
+
+    /**
+     * Internal compliment to negate for wrapping a function
+     * which will only ever take 3 arguments. Useful for
+     * reject and omit.
+     *
+     * @static
+     * @memberOf _
+     * @category Function
+     * @param {Function} predicate The predicate to negate.
+     * @returns {Function} Returns the new function.
+     */
+    function negate3Args(predicate) {
+      return function(a, b, c) {
+        return !predicate(a, b, c);
       };
     }
 
@@ -9364,9 +9379,7 @@
         return pickByArray(object, baseDifference(keysIn(object), props));
       }
       predicate = bindCallback(predicate, thisArg, 3);
-      return pickByCallback(object, function(value, key, object) {
-        return !predicate(value, key, object);
-      });
+      return pickByCallback(object, negate3Args(predicate));
     }
 
     /**
@@ -11334,11 +11347,9 @@
       });
     };
 
-    LazyWrapper.prototype.reject = function(iteratee, thisArg) {
-      iteratee = getCallback(iteratee, thisArg, 3);
-      return this.filter(function(value, index, array) {
-        return !iteratee(value, index, array);
-      });
+    LazyWrapper.prototype.reject = function(predicate, thisArg) {
+      predicate = getCallback(predicate, thisArg, 3);
+      return this.filter(negate3Args(predicate));
     };
 
     LazyWrapper.prototype.slice = function(start, end) {
