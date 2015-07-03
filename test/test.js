@@ -4884,6 +4884,12 @@
       'findLast',
       'findLastIndex',
       'findLastKey',
+      'forEach',
+      'forEachRight',
+      'forIn',
+      'forInRight',
+      'forOwn',
+      'forOwnRight',
       'max',
       'min',
       'some'
@@ -5008,21 +5014,24 @@
 
       test('`_.' + methodName + '` should return an unwrapped value when implicitly chaining', 1, function() {
         if (!isNpm) {
-          var wrapped = _(array)[methodName](_.noop);
-          ok(!(wrapped instanceof _));
+          var actual = _(array)[methodName](_.noop);
+          ok(!(actual instanceof _));
         }
         else {
           skipTest();
         }
       });
 
-      test('`_.' + methodName + '` should return a wrapped value when implicitly chaining', 1, function() {
+      test('`_.' + methodName + '` should return a wrapped value when explicitly chaining', 2, function() {
         if (!isNpm) {
-          var wrapped = _(array).chain()[methodName](_.noop);
-          ok(wrapped instanceof _);
+          var wrapped = _(array).chain(),
+              actual = wrapped[methodName](_.noop);
+
+          ok(actual instanceof _);
+          notStrictEqual(actual, wrapped);
         }
         else {
-          skipTest();
+          skipTest(2);
         }
       });
     });
@@ -5056,16 +5065,6 @@
       test('`_.' + methodName + '` should return the collection', 1, function() {
         if (func) {
           strictEqual(func(array, Boolean), array);
-        }
-        else {
-          skipTest();
-        }
-      });
-
-      test('`_.' + methodName + '` should not return the existing wrapped value when chaining', 1, function() {
-        if (!(isBaseEach || isNpm)) {
-          var wrapped = _(array);
-          notStrictEqual(wrapped[methodName](_.noop), wrapped);
         }
         else {
           skipTest();
@@ -5306,8 +5305,10 @@
 
     test('`_.' + methodName + '` should not return the existing wrapped value when chaining', 1, function() {
       if (!isNpm) {
-        var wrapped = _({ 'a': 1 });
-        notStrictEqual(wrapped[methodName]({ 'b': 2 }), wrapped);
+        var wrapped = _({ 'a': 1 }),
+            actual = wrapped[methodName]({ 'b': 2 });
+
+        notStrictEqual(actual, wrapped);
       }
       else {
         skipTest();
