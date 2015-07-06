@@ -1029,6 +1029,20 @@
         skipTest();
       }
     });
+
+    test('#1319: should work with named functions (which don\'t conflict with lodash names)', 2, function() {
+      function run(a, b) {
+        return a + b;
+      }
+      var curried = _.curry(run)(1);
+      strictEqual(curried(2), 3);
+
+      function VERSION(a, b) {
+        return a + b;
+      }
+      var curried = _.curry(VERSION)(1);
+      strictEqual(curried(2), 3);
+    });
   }());
 
   /*--------------------------------------------------------------------------*/

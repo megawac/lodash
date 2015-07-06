@@ -4257,7 +4257,7 @@
       if (func === other) {
         return true;
       }
-      var data = getData(other);
+      var data = isFunction(other) && getData(other);
       return !!data && func === data[0];
     }
 
